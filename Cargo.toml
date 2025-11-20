@@ -1,0 +1,52 @@
+[package]
+name = "rustobot"
+version = "0.1.0"
+edition = "2021"
+authors = ["Dan <22007659+senegalha@users.noreply.github.com>"]
+description = "Telegram Bot for Service Cost Sharing"
+license = "MIT"
+repository = "https://github.com/senegalha/rustobot"
+
+[dependencies]
+tokio = { version = "1.48", features = ["full"] }
+teloxide = { version = "0.17", features = ["macros"] }
+teloxide-core = "0.9"
+
+sqlx = { version = "0.8", features = ["runtime-tokio-native-tls", "postgres", "uuid", "json", "bigdecimal", "chrono"] }
+
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+
+uuid = { version = "1.2", features = ["v4", "serde"] }
+chrono = { version = "0.4", features = ["serde"] }
+
+dotenvy = "0.15"
+
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter", "json", "fmt"] }
+log = "0.4"
+
+anyhow = "1.0"
+thiserror = "1.0"
+
+reqwest = { version = "0.12", features = ["json"] }
+strsim = "0.11"
+rust_decimal = "1.35"
+regex = "1.10"
+
+axum = "0.8"
+tower = "0.4"
+tower-http = { version = "0.5", features = ["cors", "trace"] }
+
+[dev-dependencies]
+tokio-test = "0.4"
+mockall = "0.12"
+serial_test = "3.1"
+
+[profile.release]
+opt-level = 3
+lto = true
+codegen-units = 1
+
+[profile.dev]
+opt-level = 0
