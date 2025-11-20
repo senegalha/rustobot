@@ -1,0 +1,50 @@
+version: "3.8"
+
+services:
+    postgres:
+        image: postgres:17-alpine
+        container_name: telegram_bot_db
+        environment:
+            POSTGRES_USER: ${DB_USER:-botuser}
+            POSTGRES_PASSWORD: ${DB_PASSWORD:-botpass}
+            POSTGRES_DB: ${DB_NAME:-telegram_bot}
+            POSTGRES_INITDB_ARGS: "-c timezone=America/Sao_Paulo"
+        ports:
+            - "${DB_PORT:-5432}:5432"
+        volumes:
+            - postgres_data:/var/lib/postgresql/data
+        networks:
+            - bot_network
+        healthcheck:
+            test:
+                [
+                    "CMD-SHELL",
+                    "pg_isready -U ${DB_USER:-botuser} -d ${DB_NAME:-telegram_bot}",
+                ]
+            interval: 10s
+            timeout: 5s
+            retries: 5
+        restart: unless-stopped
+
+    pgadmin:
+        image: dpage/pgadmin4:latest
+        container_name: telegram_bot_pgadmin
+        environment:
+            PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL:-admin@admin.com}
+            PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD:-admin}
+        ports:
+            - "${PGADMIN_PORT:-5050}:80"
+        networks:
+            - bot_network
+        depends_on:
+            postgres:
+                condition: service_healthy
+        restart: unless-stopped
+
+volumes:
+    postgres_data:
+        driver: local
+
+networks:
+    bot_network:
+        driver: bridge
