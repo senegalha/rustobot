@@ -1,1 +1,3 @@
-pub fn services_placeholder() {}
+use crate::domain::models::*;
+
+pub fn placeholder() {}
